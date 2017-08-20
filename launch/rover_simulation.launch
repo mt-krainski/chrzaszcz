@@ -1,0 +1,58 @@
+<launch>
+
+  <!-- these are the arguments you can pass this launch file, for example paused:=true -->
+  <arg name="paused" default="false"/>
+  <arg name="use_sim_time" default="true"/>
+  <arg name="gui" default="false"/>
+  <arg name="headless" default="false"/>
+  <arg name="debug" default="false"/>
+  <arg name="use_rviz" default="true"/>
+
+  <arg name="rvizconfig" default="$(find chrzaszcz)/rviz/manual_control.rviz" />
+
+  <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find chrzaszcz_description)/worlds/empty.world"/>
+    <arg name="debug" value="$(arg debug)" />
+    <arg name="gui" value="$(arg gui)" />
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+    <arg name="headless" value="$(arg headless)"/>
+  </include>
+
+  <!-- Load the URDF into the ROS Parameter Server -->
+  <param name="robot_description"
+    command="$(find xacro)/xacro --inorder '$(find chrzaszcz_description)/urdf/rover.xacro'" />
+
+  <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
+  <node name="$(anon robot_spawner)" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+    args="-urdf -model chrzaszcz_rover -param robot_description"/>
+
+
+  <param name="cube_description"
+    command="$(find xacro)/xacro --inorder '$(find chrzaszcz_description)/urdf/cube5x5.xacro'" />
+
+  <node name="$(anon cube_spawner)" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+    args="-urdf -model cube -param cube_description -y 1"/>
+
+  <node name="$(anon cube2_spawner)" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+    args="-urdf -model cube2 -param cube_description -x -0.5"/>
+
+  <rosparam file="$(find chrzaszcz_description)/config/control.yaml" command="load"/>
+
+  <include file="$(find chrzaszcz_description)/launch/control.launch"/>
+
+  <node name="controller_to_joint_state_republisher" pkg="chrzaszcz" type="controller_to_robot_state_republisher.py" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" if="$(arg use_rviz)"/>
+
+  <node name="keyboard_reader" pkg="keyboard" type="keyboard" required="true">
+    <param name="allow_repeat" value="true"/>
+    <param name="repeat_delay" value="30"/>
+    <param name="repeat_interval" value="50"/>
+  </node>
+
+  <node name="robot_control" pkg="chrzaszcz" type="robot_control.py"/>
+
+</launch>
