@@ -48,8 +48,10 @@
   <run_depend>sensor_msgs</run_depend>
   <run_depend>usb_cam</run_depend>
   <run_depend>raspi_cam</run_depend>
-  <buildtool_depend>catkin</buildtool_depend>
+  <run_depend>chrzaszcz_description</run_depend>
+  <run_depend>gazebo_ros</run_depend>
 
+  <buildtool_depend>catkin</buildtool_depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
