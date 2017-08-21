@@ -118,7 +118,7 @@ def keyboardCallback(msg):
 
 rospy.init_node("robot_control")
 
-rospy.Subscriber('/keyboard/keydown', Key, keyboardCallback)
+rospy.Subscriber('/keyboard_reader/keydown', Key, keyboardCallback)
 cmd_vel_publisher = rospy.Publisher('/chrzaszcz/cmd_vel', Twist, queue_size=1)
 requested_pose_publisher = rospy.Publisher('/requested_pose', JointState, queue_size=1)
 
