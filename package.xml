@@ -36,20 +36,17 @@
   <build_depend>control_msgs</build_depend>
   <build_depend>sensor_msgs</build_depend>
 
-  <run_depend>gazebo_grasp_plugin</run_depend>
   <run_depend>roscpp</run_depend>
   <run_depend>rospy</run_depend>
   <run_depend>std_msgs</run_depend>
   <run_depend>geometry_msgs</run_depend>
-  <run_depend>gazebo_grasp_plugin</run_depend>
-  <run_depend>keyboard</run_depend>
   <run_depend>tf</run_depend>
   <run_depend>control_msgs</run_depend>
   <run_depend>sensor_msgs</run_depend>
-  <run_depend>usb_cam</run_depend>
-  <run_depend>raspi_cam</run_depend>
-  <run_depend>chrzaszcz_description</run_depend>
   <run_depend>gazebo_ros</run_depend>
+  <run_depend>controller_manager</run_depend>
+  <run_depend>joint-state-controller</run_depend>
+  <run_depend>effor-controllers</run_depend>
 
   <buildtool_depend>catkin</buildtool_depend>
 
