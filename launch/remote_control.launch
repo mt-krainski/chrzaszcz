@@ -1,0 +1,18 @@
+<launch>
+
+  <arg name="use_rviz" default="false"/>
+
+  <arg name="rvizconfig" default="$(find chrzaszcz)/rviz/remote_operation.rviz" />
+
+  <!-- <node name="controller_to_joint_state_republisher" pkg="chrzaszcz" type="controller_to_robot_state_republisher.py" /> -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher"/>
+
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" if="$(arg use_rviz)"/>
+
+  <node name="keyboard" pkg="keyboard" type="keyboard" required="true">
+    <param name="allow_repeat" value="true"/>
+    <param name="repeat_delay" value="15"/>
+    <param name="repeat_interval" value="25"/>
+  </node>
+
+</launch>
