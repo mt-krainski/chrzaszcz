@@ -48,25 +48,25 @@ def keyboardCallback(msg):
     cmd_vel.linear.x = 0.0
     cmd_vel.angular.z = 0.0
     if msg.code == keyboard_codes.KEY_W:
-        cmd_vel.linear.x = 0.5
+        cmd_vel.linear.x = 0.8
     elif msg.code == keyboard_codes.KEY_S:
-        cmd_vel.linear.x = -0.5
+        cmd_vel.linear.x = -0.8
     elif msg.code == keyboard_codes.KEY_D:
-        cmd_vel.angular.z = -5.0
+        cmd_vel.angular.z = -0.5
     elif msg.code == keyboard_codes.KEY_A:
-        cmd_vel.angular.z = 5.0
+        cmd_vel.angular.z = 0.5
     elif msg.code == keyboard_codes.KEY_E:
         cmd_vel.linear.x = 0.5
-        cmd_vel.angular.z = -5.0
+        cmd_vel.angular.z = -0.5
     elif msg.code == keyboard_codes.KEY_Q:
         cmd_vel.linear.x = 0.5
-        cmd_vel.angular.z = 5.0
+        cmd_vel.angular.z = 0.5
     elif msg.code == keyboard_codes.KEY_Z:
         cmd_vel.linear.x = -0.5
-        cmd_vel.angular.z = -5.0
+        cmd_vel.angular.z = -0.5
     elif msg.code == keyboard_codes.KEY_C:
         cmd_vel.linear.x = -0.5
-        cmd_vel.angular.z = 5.0
+        cmd_vel.angular.z = 0.5
 
     elif msg.code == keyboard_codes.KEY_R:
         if jointController[0] < math.radians(70.0):
@@ -118,7 +118,7 @@ def keyboardCallback(msg):
 
 rospy.init_node("robot_control")
 
-rospy.Subscriber('/keyboard_reader/keydown', Key, keyboardCallback)
+rospy.Subscriber('/keyboard/keydown', Key, keyboardCallback)
 cmd_vel_publisher = rospy.Publisher('/chrzaszcz/cmd_vel', Twist, queue_size=1)
 requested_pose_publisher = rospy.Publisher('/requested_pose', JointState, queue_size=1)
 

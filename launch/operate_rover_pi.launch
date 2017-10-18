@@ -1,0 +1,48 @@
+<launch>
+
+  <arg name="use_rviz" default="false"/>
+
+  <arg name="rvizconfig" default="$(find chrzaszcz)/rviz/rover_operation.rviz" />
+
+  <!-- Load the URDF into the ROS Parameter Server -->
+  <param name="robot_description"
+    command="cat '$(find chrzaszcz_description)/urdf/rover.urdf'" />
+
+  <!-- <node name="controller_to_joint_state_republisher" pkg="chrzaszcz" type="controller_to_robot_state_republisher.py" /> -->
+  <!-- <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher"/> -->
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+    <rosparam param='source_list'> [chrzaszcz/arm_state] </rosparam>
+  </node>
+
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" if="$(arg use_rviz)"/>
+
+  <node name="robot_control" pkg="chrzaszcz" type="robot_control.py"/>
+  <node name="arm_control" pkg="chrzaszcz" type="state_publisher"/>
+  <!-- <node name="teleop_control" pkg="steering" type="teleop_driver.py"/> -->
+  <node name="usb_cam_node" pkg="usb_cam" type="usb_cam_node">
+    <param name="camera_frame_id" value="front_camera"/>
+    <param name="camera_name" value="front_camera"/>
+    <param name="framerate" value="2"/>
+    <param name="video_device" value="/dev/video0"/>
+    <param name="image_width" value="640"/>
+    <param name="image_height" value="480"/>
+  </node>
+
+  <node name="usb_cam_node" pkg="usb_cam" type="usb_cam_node">
+    <param name="camera_frame_id" value="front_camera"/>
+    <param name="camera_name" value="front_camera"/>
+    <param name="framerate" value="2"/>
+    <param name="video_device" value="/dev/video0"/>
+    <param name="image_width" value="640"/>
+    <param name="image_height" value="480"/>
+    <param name="pixel_format" value="yuyv"/>
+  </node>
+
+
+  <node name="rear_camera" pkg="raspicam" type="raspicam_node">
+    <param name="framerate" value="15"/>
+    <param name="width" value="640"/>
+    <param name="height" value="480"/>
+  </node>
+
+</launch>
