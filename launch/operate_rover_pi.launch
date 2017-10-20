@@ -9,40 +9,65 @@
     command="cat '$(find chrzaszcz_description)/urdf/rover.urdf'" />
 
   <!-- <node name="controller_to_joint_state_republisher" pkg="chrzaszcz" type="controller_to_robot_state_republisher.py" /> -->
-  <!-- <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher"/> -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher"/>
   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
     <rosparam param='source_list'> [chrzaszcz/arm_state] </rosparam>
   </node>
 
-  <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" if="$(arg use_rviz)"/>
+  <!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" if="$(arg use_rviz)"/> -->
 
   <node name="robot_control" pkg="chrzaszcz" type="robot_control.py"/>
   <node name="arm_control" pkg="chrzaszcz" type="state_publisher"/>
   <!-- <node name="teleop_control" pkg="steering" type="teleop_driver.py"/> -->
-  <node name="usb_cam_node" pkg="usb_cam" type="usb_cam_node">
-    <param name="camera_frame_id" value="front_camera"/>
-    <param name="camera_name" value="front_camera"/>
-    <param name="framerate" value="2"/>
+  <node name="arm_camera" pkg="usb_cam" type="usb_cam_node">
+    <param name="camera_frame_id" value="arm_camera"/>
+    <param name="camera_name" value="arm_camera"/>
+    <param name="framerate" value="30"/>
     <param name="video_device" value="/dev/video0"/>
-    <param name="image_width" value="640"/>
-    <param name="image_height" value="480"/>
+    <param name="image_width" value="800"/>
+    <param name="image_height" value="600"/>
   </node>
 
-  <node name="usb_cam_node" pkg="usb_cam" type="usb_cam_node">
+  <node name="front_camera" pkg="usb_cam" type="usb_cam_node">
     <param name="camera_frame_id" value="front_camera"/>
     <param name="camera_name" value="front_camera"/>
-    <param name="framerate" value="2"/>
-    <param name="video_device" value="/dev/video0"/>
-    <param name="image_width" value="640"/>
-    <param name="image_height" value="480"/>
+    <param name="framerate" value="30"/>
+    <param name="video_device" value="/dev/video1"/>
+    <param name="image_width" value="800"/>
+    <param name="image_height" value="600"/>
     <param name="pixel_format" value="yuyv"/>
   </node>
 
-
   <node name="rear_camera" pkg="raspicam" type="raspicam_node">
-    <param name="framerate" value="15"/>
-    <param name="width" value="640"/>
-    <param name="height" value="480"/>
+    <param name="framerate" value="30"/>
+    <param name="width" value="800"/>
+    <param name="height" value="600"/>
+  </node>
+
+  <node name="arm_camera_image_rotater" pkg="image_rotate" type="image_rotate">
+    <remap from="image" to="/arm_camera/image_raw"/>
+    <remap from="rotated/image" to="/arm_camera/image_rotated"/>
+    <param name="target_frame_id" value="third_link"/>
+    <param name="target_x" value="0"/>
+    <param name="target_y" value="1"/>
+    <param name="target_z" value="0"/>
+    <param name="source_frame_id" value="arm_camera"/>
+    <param name="source_x" value="0"/>
+    <param name="source_y" value="1"/>
+    <param name="source_z" value="0"/>
+    <param name="use_camera_info" value="false"/>
+  </node>
+
+  <node name="front_camera_image_rotater" pkg="image_rotate" type="image_rotate">
+    <remap from="image" to="/front_camera/image_raw/"/>
+    <remap from="rotated/image" to="/front_camera/image_rotated"/>
+    <param name="target_x" value="0"/>
+    <param name="target_y" value="0"/>
+    <param name="target_z" value="1"/>
+    <param name="source_x" value="1"/>
+    <param name="source_y" value="0"/>
+    <param name="source_z" value="0"/>
+    <param name="use_camera_info" value="false"/>
   </node>
 
 </launch>
